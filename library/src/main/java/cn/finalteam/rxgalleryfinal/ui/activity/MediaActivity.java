@@ -1,7 +1,6 @@
 package cn.finalteam.rxgalleryfinal.ui.activity;
 
 import android.content.pm.PackageManager;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
@@ -74,6 +73,7 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     private ArrayList<MediaBean> mPageMediaList;
     private int mPagePosition;
     private int mPreviewPosition;
+    private TextView mTvBack;
 
     @Override
     public int getContentView() {
@@ -123,15 +123,16 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         mToolbar.setTitle("");
         mTvToolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
         mTvOverAction = (TextView) findViewById(R.id.tv_over_action);
+        mTvBack = (TextView) findViewById(R.id.tv_back);
         mToolbarDivider = findViewById(R.id.toolbar_divider);
     }
 
     @Override
     protected void setTheme() {
-        Drawable closeDrawable = ThemeUtils.resolveDrawable(this, R.attr.gallery_toolbar_close_image, R.drawable.gallery_default_toolbar_close_image);
-        int closeColor = ThemeUtils.resolveColor(this, R.attr.gallery_toolbar_close_color, R.color.gallery_default_toolbar_widget_color);
-        closeDrawable.setColorFilter(closeColor, PorterDuff.Mode.SRC_ATOP);
-        mToolbar.setNavigationIcon(closeDrawable);
+//        Drawable closeDrawable = ThemeUtils.resolveDrawable(this, R.attr.gallery_toolbar_close_image, R.drawable.gallery_default_toolbar_close_image);
+//        int closeColor = ThemeUtils.resolveColor(this, R.attr.gallery_toolbar_close_color, R.color.gallery_default_toolbar_widget_color);
+//        closeDrawable.setColorFilter(closeColor, PorterDuff.Mode.SRC_ATOP);
+//        mToolbar.setNavigationIcon(closeDrawable);
 
         int overButtonBg = ThemeUtils.resolveDrawableRes(this, R.attr.gallery_toolbar_over_button_bg);
         if (overButtonBg != 0) {
@@ -239,11 +240,13 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         ft.show(mMediaGridFragment)
                 .commit();
 
-        if (mConfiguration.isImage()) {
-            mTvToolbarTitle.setText(R.string.gallery_media_grid_image_title);
-        } else {
-            mTvToolbarTitle.setText(R.string.gallery_media_grid_video_title);
-        }
+//        if (mConfiguration.isImage()) {
+//            mTvToolbarTitle.setText(R.string.gallery_media_grid_image_title);
+//        } else {
+//            mTvToolbarTitle.setText(R.string.gallery_media_grid_video_title);
+//        }
+        mTvToolbarTitle.setText(R.string.gallery_all_pic);
+
     }
 
     @Override

@@ -252,7 +252,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         mRlRootView = (RelativeLayout) view.findViewById(R.id.rl_root_view);
 
         mRvMedia.setEmptyView(mLlEmptyView);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
         gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
         mRvMedia.addItemDecoration(new MarginDecoration(getContext()));
         mRvMedia.setLayoutManager(gridLayoutManager);
