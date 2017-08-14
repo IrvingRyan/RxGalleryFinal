@@ -11,9 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -51,9 +49,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private final Configuration mConfiguration;
     private final Drawable mDefaultImage;
     private final Drawable mImageViewBg;
-    private final Drawable mCameraImage;
     private final int mCameraImageBgColor;
-    private final int mCameraTextColor;
     private int imageLoaderType = 0;
 
     public MediaGridAdapter(
@@ -69,9 +65,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         this.mConfiguration = configuration;
         this.imageLoaderType = configuration.getImageLoaderType();
         this.mImageViewBg = ThemeUtils.resolveDrawable(mMediaActivity, R.attr.gallery_imageview_bg, R.drawable.gallery_default_image);
-        this.mCameraImage = ThemeUtils.resolveDrawable(mMediaActivity, R.attr.gallery_camera_image, R.drawable.gallery_ic_camera);
         this.mCameraImageBgColor = ThemeUtils.resolveColor(mMediaActivity, R.attr.gallery_camera_bg, R.color.gallery_default_camera_bg_color);
-        this.mCameraTextColor = ThemeUtils.resolveColor(mMediaActivity, R.attr.gallery_take_image_text_color, R.color.gallery_default_take_image_text_color);
     }
 
     public static void setCheckedListener(IMultiImageCheckedListener checkedListener) {
@@ -96,10 +90,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.mCbCheck.setVisibility(View.GONE);
             holder.mIvMediaImage.setVisibility(View.GONE);
             holder.mLlCamera.setVisibility(View.VISIBLE);
-            holder.mIvCameraImage.setImageDrawable(mCameraImage);
-            holder.mTvCameraTxt.setTextColor(mCameraTextColor);
-            holder.mTvCameraTxt.setText(mConfiguration.isImage() ? mMediaActivity.getString(R.string.gallery_take_image) : mMediaActivity.getString(R.string.gallery_video));
-            holder.mIvCameraImage.setBackgroundColor(mCameraImageBgColor);
         } else {
             if (mConfiguration.isRadio()) {
                 holder.mCbCheck.setVisibility(View.GONE);
@@ -154,8 +144,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         final AppCompatCheckBox mCbCheck;
         final LinearLayout mLlCamera;
-        final TextView mTvCameraTxt;
-        final ImageView mIvCameraImage;
         View mIvMediaImage;
         SquareRelativeLayout relativeLayout;
 
@@ -166,8 +154,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             mCbCheck = (AppCompatCheckBox) itemView.findViewById(R.id.cb_check);
             relativeLayout = (SquareRelativeLayout) itemView.findViewById(R.id.rootView);
             mLlCamera = (LinearLayout) itemView.findViewById(R.id.ll_camera);
-            mTvCameraTxt = (TextView) itemView.findViewById(R.id.tv_camera_txt);
-            mIvCameraImage = (ImageView) itemView.findViewById(R.id.iv_camera_image);
 
             int checkTint = ThemeUtils.resolveColor(itemView.getContext(), R.attr.gallery_checkbox_button_tint_color, R.color.gallery_default_checkbox_button_tint_color);
             CompoundButtonCompat.setButtonTintList(mCbCheck, ColorStateList.valueOf(checkTint));
