@@ -4,44 +4,47 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <RelativeLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
+        android:layout_height="@dimen/gallery_default_toolbar_height"
+        android:background="@color/gallery_default_color_toolbar_bg">
+
         <TextView
-            android:layout_marginLeft="5dp"
             android:id="@+id/tv_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:drawableLeft="@drawable/icon_back"
-            android:textSize="16sp"
-            android:textColor="@color/gallery_default_toolbar_widget_color"
             android:drawablePadding="3dp"
+            android:gravity="center_vertical"
             android:text="@string/gallery_back_button_text"
-            />
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/gallery_default_toolbar_widget_color"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/tv_toolbar_title"
-            style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_centerInParent="true"
+            android:textColor="@color/gallery_default_toolbar_widget_color"
+            android:layout_gravity="center"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_over_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_margin="8dp"
-            android:text="@string/gallery_over_button_text" />
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/gallery_default_toolbar_widget_color"
+            android:layout_marginRight="15dp"
+            android:gravity="center_vertical"
+            android:text="@string/gallery_cancel_button_text"
+            android:textSize="15sp" />
 
-    </android.support.v7.widget.Toolbar>
-
-    <View
-        android:id="@+id/toolbar_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp" />
+    </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/fragment_container"
