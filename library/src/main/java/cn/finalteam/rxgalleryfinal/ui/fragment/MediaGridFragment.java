@@ -44,7 +44,9 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.presenter.impl.MediaGridPresenterImpl;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBus;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusDisposable;
+import cn.finalteam.rxgalleryfinal.rxbus.event.BaseResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.CloseMediaViewPageFragmentEvent;
+import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageRadioResultEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.MediaCheckChangeEvent;
 import cn.finalteam.rxgalleryfinal.rxbus.event.OpenMediaPageFragmentEvent;
@@ -112,7 +114,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     private BucketAdapter mBucketAdapter;
     private RelativeLayout mRlBucektOverview;
     private List<BucketBean> mBucketBeanList;
-    private TextView mTvFolderName;
+    private TextView mSelectDone;
     private TextView mTvPreview;
     private RelativeLayout mRlRootView;
     //扫描
@@ -259,25 +261,11 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         mRvMedia.setOnLoadMoreListener(this);
         mRvMedia.setFooterViewHide(true);
 
-        mTvFolderName = (TextView) view.findViewById(R.id.tv_folder_name);
-        mTvFolderName.setOnClickListener(this);
+        mSelectDone = (TextView) view.findViewById(R.id.select_done);
+        mSelectDone.setOnClickListener(this);
         mTvPreview = (TextView) view.findViewById(R.id.tv_preview);
         mTvPreview.setOnClickListener(this);
         mTvPreview.setEnabled(false);
-        if (mConfiguration.isRadio()) {
-            view.findViewById(R.id.tv_preview_vr).setVisibility(View.GONE);
-            mTvPreview.setVisibility(View.GONE);
-
-        } else {
-            if (mConfiguration.isHidePreview()) {
-                view.findViewById(R.id.tv_preview_vr).setVisibility(View.GONE);
-                mTvPreview.setVisibility(View.GONE);
-            } else {
-                view.findViewById(R.id.tv_preview_vr).setVisibility(View.VISIBLE);
-                mTvPreview.setVisibility(View.VISIBLE);
-            }
-        }
-
         mMediaBeanList = new ArrayList<>();
         mScreenSize = DeviceUtils.getScreenSize(getContext());
         mMediaGridAdapter = new MediaGridAdapter(mMediaActivity, mMediaBeanList, mScreenSize.widthPixels, mConfiguration);
@@ -318,12 +306,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
             activity = getActivity();
         }
 
-        if (mConfiguration.isImage()) {
-            mTvFolderName.setText(R.string.gallery_all_image);
-        } else {
-            mTvFolderName.setText(R.string.gallery_all_video);
-        }
-
         String requestStorageAccessPermissionTips = ThemeUtils.resolveString(getContext(),
                 R.attr.gallery_request_storage_access_permission_tips,
                 R.string.gallery_default_request_storage_access_permission_tips);
@@ -344,10 +326,12 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 .subscribeWith(new RxBusDisposable<MediaCheckChangeEvent>() {
                     @Override
                     protected void onEvent(MediaCheckChangeEvent mediaCheckChangeEvent) {
-                        if (mMediaActivity.getCheckedList().size() == 0) {
+                        if (mMediaActivity.getCheckedList() == null || mMediaActivity.getCheckedList().size() == 0) {
                             mTvPreview.setEnabled(false);
+                            mSelectDone.setText(getString(R.string.gallery_over_button_text));
                         } else {
                             mTvPreview.setEnabled(true);
+                            mSelectDone.setText(getString(R.string.gallery_over_button_text_checked, mMediaActivity.getCheckedList().size()));
                         }
 
                     }
@@ -469,6 +453,9 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     public void onItemClick(View view, int position) {
         BucketBean bucketBean = mBucketBeanList.get(position);
         String bucketId = bucketBean.getBucketId();
+        if (getActivity() != null) {
+            ((MediaActivity) getActivity()).changeTitle(bucketBean.getBucketName());
+        }
         mRlBucektOverview.setVisibility(View.GONE);
         if (TextUtils.equals(mBucketId, bucketId)) {
             return;
@@ -478,11 +465,11 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         mRvMedia.setHasLoadMore(false);
         mMediaBeanList.clear();
         mMediaGridAdapter.notifyDataSetChanged();
-        mTvFolderName.setText(bucketBean.getBucketName());
         mBucketAdapter.setSelectedBucket(bucketBean);
         mRvMedia.setFooterViewHide(true);
         mPage = 1;
         mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
+
     }
 
     @Override
@@ -719,12 +706,11 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         int id = v.getId();
         if (id == R.id.tv_preview) {
             RxBus.getDefault().post(new OpenMediaPreviewFragmentEvent());
-        } else if (id == R.id.tv_folder_name) {
-            v.setEnabled(false);
-            if (isShowRvBucketView()) {
-                hideRvBucketView();
-            } else {
-                showRvBucketView();
+        } else if (id == R.id.select_done) {
+            if (mMediaActivity.getCheckedList() != null && mMediaActivity.getCheckedList().size() > 0) {
+                BaseResultEvent event = new ImageMultipleResultEvent(mMediaActivity.getCheckedList());
+                RxBus.getDefault().post(event);
+                mMediaActivity.finish();
             }
         }
     }
@@ -742,7 +728,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         slideInUnderneathAnimation
                 .setDirection(Animation.DIRECTION_DOWN)
                 .setDuration(Animation.DURATION_DEFAULT)
-                .setListener(animation -> mTvFolderName.setEnabled(true))
+                .setListener(animation -> mSelectDone.setEnabled(true))
                 .animate();
     }
 
@@ -754,7 +740,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 .setDirection(Animation.DIRECTION_DOWN)
                 .setDuration(Animation.DURATION_DEFAULT)
                 .setListener(animation -> {
-                    mTvFolderName.setEnabled(true);
+                    mSelectDone.setEnabled(true);
                     mRlBucektOverview.setVisibility(View.GONE);
                 })
                 .animate();
@@ -817,6 +803,13 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
                     }
                 });
+    }
+
+    public void changeList() {
+        if (mMediaGridAdapter != null) {
+            mMediaGridAdapter.notifyDataSetChanged();
+        }
+        mSelectDone.setText(getString(R.string.gallery_over_button_text));
     }
 
     @Override

@@ -1,9 +1,7 @@
 package cn.finalteam.rxgalleryfinal.ui.adapter;
 
-import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -49,7 +47,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private final Configuration mConfiguration;
     private final Drawable mDefaultImage;
     private final Drawable mImageViewBg;
-    private final int mCameraImageBgColor;
     private int imageLoaderType = 0;
 
     public MediaGridAdapter(
@@ -65,7 +62,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         this.mConfiguration = configuration;
         this.imageLoaderType = configuration.getImageLoaderType();
         this.mImageViewBg = ThemeUtils.resolveDrawable(mMediaActivity, R.attr.gallery_imageview_bg, R.drawable.gallery_default_image);
-        this.mCameraImageBgColor = ThemeUtils.resolveColor(mMediaActivity, R.attr.gallery_camera_bg, R.color.gallery_default_camera_bg_color);
     }
 
     public static void setCheckedListener(IMultiImageCheckedListener checkedListener) {
@@ -95,8 +91,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 holder.mCbCheck.setVisibility(View.GONE);
             } else {
                 holder.mCbCheck.setVisibility(View.VISIBLE);
-                holder.mCbCheck.setOnClickListener(new OnCheckBoxClickListener(mediaBean));
                 holder.mCbCheck.setOnCheckedChangeListener(new OnCheckBoxCheckListener(mediaBean));
+                holder.mCbCheck.setOnClickListener(new OnCheckBoxClickListener(mediaBean));
+                holder.relativeLayout.setOnClickListener(new OnCheckBoxClickListener(mediaBean));
             }
             holder.mIvMediaImage.setVisibility(View.VISIBLE);
             holder.mLlCamera.setVisibility(View.GONE);
@@ -155,8 +152,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             relativeLayout = (SquareRelativeLayout) itemView.findViewById(R.id.rootView);
             mLlCamera = (LinearLayout) itemView.findViewById(R.id.ll_camera);
 
-            int checkTint = ThemeUtils.resolveColor(itemView.getContext(), R.attr.gallery_checkbox_button_tint_color, R.color.gallery_default_checkbox_button_tint_color);
-            CompoundButtonCompat.setButtonTintList(mCbCheck, ColorStateList.valueOf(checkTint));
         }
     }
 
@@ -170,13 +165,31 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         @Override
         public void onClick(View view) {
-            if (mConfiguration.getMaxSize() == mMediaActivity.getCheckedList().size() &&
-                    !mMediaActivity.getCheckedList().contains(mediaBean)) {
+            if (view instanceof AppCompatCheckBox) {
                 AppCompatCheckBox checkBox = (AppCompatCheckBox) view;
-                checkBox.setChecked(false);
-                Logger.i("=>" + mMediaActivity.getResources().getString(R.string.gallery_image_max_size_tip, mConfiguration.getMaxSize()));
+                if (mConfiguration.getMaxSize() == mMediaActivity.getCheckedList().size() &&
+                        !mMediaActivity.getCheckedList().contains(mediaBean)) {
+                    Logger.i("=>" + mMediaActivity.getResources().getString(R.string.gallery_image_max_size_tip, mConfiguration.getMaxSize()));
+                } else {
+                    RxBus.getDefault().post(new MediaCheckChangeEvent(mediaBean));
+                }
             } else {
-                RxBus.getDefault().post(new MediaCheckChangeEvent(mediaBean));
+                AppCompatCheckBox checkBox = (AppCompatCheckBox) view.findViewById(R.id.cb_check);
+                if (checkBox == null) {
+                    return;
+                }
+                if (mConfiguration.getMaxSize() == mMediaActivity.getCheckedList().size() &&
+                        !mMediaActivity.getCheckedList().contains(mediaBean)) {
+                    checkBox.setChecked(false);
+                    Logger.i("=>" + mMediaActivity.getResources().getString(R.string.gallery_image_max_size_tip, mConfiguration.getMaxSize()));
+                } else {
+                    RxBus.getDefault().post(new MediaCheckChangeEvent(mediaBean));
+                    if (checkBox.isChecked()) {
+                        checkBox.setChecked(false);
+                    } else {
+                        checkBox.setChecked(true);
+                    }
+                }
             }
         }
     }
