@@ -57,7 +57,6 @@ import cn.finalteam.rxgalleryfinal.ui.adapter.BucketAdapter;
 import cn.finalteam.rxgalleryfinal.ui.adapter.MediaGridAdapter;
 import cn.finalteam.rxgalleryfinal.ui.base.IRadioImageCheckedListener;
 import cn.finalteam.rxgalleryfinal.ui.widget.FooterAdapter;
-import cn.finalteam.rxgalleryfinal.ui.widget.HorizontalDividerItemDecoration;
 import cn.finalteam.rxgalleryfinal.ui.widget.MarginDecoration;
 import cn.finalteam.rxgalleryfinal.ui.widget.RecyclerViewFinal;
 import cn.finalteam.rxgalleryfinal.utils.CameraUtils;
@@ -275,12 +274,12 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
-        mRvBucket.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getContext())
-                .color(getResources().getColor(R.color.gallery_bucket_list_decoration_color))
-                .size(getResources().getDimensionPixelSize(R.dimen.gallery_divider_decoration_height))
-                .margin(getResources().getDimensionPixelSize(R.dimen.gallery_bucket_margin),
-                        getResources().getDimensionPixelSize(R.dimen.gallery_bucket_margin))
-                .build());
+//        mRvBucket.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getContext())
+//                .color(getResources().getColor(R.color.gallery_bucket_list_decoration_color))
+//                .size(getResources().getDimensionPixelSize(R.dimen.gallery_divider_decoration_height))
+//                .margin(getResources().getDimensionPixelSize(R.dimen.gallery_bucket_margin),
+//                        getResources().getDimensionPixelSize(R.dimen.gallery_bucket_margin))
+//                .build());
         mRvBucket.setLayoutManager(linearLayoutManager);
         mBucketBeanList = new ArrayList<>();
         mBucketAdapter = new BucketAdapter(mBucketBeanList, mConfiguration, ContextCompat.getColor(getContext(), R.color.gallery_bucket_list_item_normal_color));
@@ -446,7 +445,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         }
 
         mBucketBeanList.addAll(list);
-        mBucketAdapter.setSelectedBucket(list.get(0));
     }
 
     @Override
@@ -465,7 +463,6 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         mRvMedia.setHasLoadMore(false);
         mMediaBeanList.clear();
         mMediaGridAdapter.notifyDataSetChanged();
-        mBucketAdapter.setSelectedBucket(bucketBean);
         mRvMedia.setFooterViewHide(true);
         mPage = 1;
         mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
