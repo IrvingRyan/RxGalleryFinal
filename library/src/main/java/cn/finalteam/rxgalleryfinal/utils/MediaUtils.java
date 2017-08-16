@@ -340,14 +340,17 @@ public class MediaUtils {
             allMediaBucket.setBucketName(context.getString(R.string.gallery_all_video));
             uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         }
-        bucketBeenList.add(allMediaBucket);
         Cursor cursor = null;
         try {
             cursor = contentResolver.query(uri, projection, null, null, MediaStore.Video.Media.DATE_ADDED + " DESC");
+            if (cursor != null) {
+                allMediaBucket.setImageCount(cursor.getCount());
+            }
         } catch (Exception e) {
             Logger.e(e);
         }
 
+        bucketBeenList.add(allMediaBucket);
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             do {
