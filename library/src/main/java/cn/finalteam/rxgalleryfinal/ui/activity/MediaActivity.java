@@ -133,6 +133,7 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
 
     @Override
     public void showMediaGridFragment() {
+        setTheme();
         mMediaPreviewFragment = null;
         mMediaPageFragment = null;
         mSelectedIndex = 0;
@@ -307,7 +308,6 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
-
 
 
 }
