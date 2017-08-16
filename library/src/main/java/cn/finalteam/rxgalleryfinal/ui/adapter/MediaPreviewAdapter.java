@@ -10,7 +10,7 @@ import java.util.List;
 import cn.finalteam.rxgalleryfinal.Configuration;
 import cn.finalteam.rxgalleryfinal.R;
 import cn.finalteam.rxgalleryfinal.bean.MediaBean;
-import uk.co.senab.photoview.PhotoView;
+import cn.finalteam.rxgalleryfinal.ui.widget.FixImageView;
 
 /**
  * Desction:
@@ -46,7 +46,7 @@ public class MediaPreviewAdapter extends RecyclingPagerAdapter {
         if (convertView == null) {
             convertView = View.inflate(container.getContext(), R.layout.gallery_media_image_preview_item, null);
         }
-        PhotoView ivImage = (PhotoView) convertView.findViewById(R.id.iv_media_image);
+        FixImageView ivImage = (FixImageView) convertView.findViewById(R.id.iv_media_image);
         String path = null;
         if (mediaBean.getWidth() > 1200 || mediaBean.getHeight() > 1200) {
             path = mediaBean.getThumbnailBigPath();

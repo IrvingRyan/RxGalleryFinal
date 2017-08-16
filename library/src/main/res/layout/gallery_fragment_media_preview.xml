@@ -4,30 +4,63 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <cn.finalteam.rxgalleryfinal.ui.widget.FixViewPager
+    <cn.finalteam.rxgalleryfinal.ui.widget.ClickableViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" />
 
     <RelativeLayout
+        android:id="@+id/rl_top_bar"
+        android:clickable="true"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:background="#EF2B2C30"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp">
+        android:layout_height="45dp"
+        android:background="#66000000"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_back" />
 
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/cb_check"
-            style="@style/Widget.AppCompat.CompoundButton.CheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_margin="2dp"
-            android:checked="true"
-            android:text="选中" />
+            android:button="@drawable/gallery_checkbox_selector"
+            android:checked="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:clickable="true"
+        android:background="#66000000"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            android:id="@+id/select_done"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/gallery_shape_done_background"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="@string/gallery_over_button_text"
+            android:textColor="@color/gallery_default_checkbox_text_color"
+            android:textSize="13sp" />
     </RelativeLayout>
 
 </RelativeLayout>
