@@ -111,11 +111,16 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     private LinearLayout mLlEmptyView;
     private RecyclerView mRvBucket;
     private BucketAdapter mBucketAdapter;
-    private RelativeLayout mRlBucektOverview;
+    private RelativeLayout mRlBucketOverview;
     private List<BucketBean> mBucketBeanList;
     private TextView mSelectDone;
     private TextView mTvPreview;
-    private RelativeLayout mRlRootView;
+    private LinearLayout mRlRootView;
+    private RelativeLayout mToolbar;
+    private TextView mTvToolbarTitle;
+    private TextView mTvOverAction;
+    private TextView mTvBack;
+
     //扫描
     private MediaScanner mMediaScanner;
     private int mPage = 1;
@@ -245,12 +250,34 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
 
     @Override
     public void onViewCreatedOk(View view, @Nullable Bundle savedInstanceState) {
+        mToolbar = (RelativeLayout) view.findViewById(R.id.toolbar);
+        mTvToolbarTitle = (TextView) view.findViewById(R.id.tv_toolbar_title);
+        mTvOverAction = (TextView) view.findViewById(R.id.tv_over_action);
+        mTvBack = (TextView) view.findViewById(R.id.tv_back);
+        mTvBack.setOnClickListener(v -> {
+            if (isVisible()) {
+                showRvBucketView();
+                changeList();
+                mTvToolbarTitle.setText(R.string.gallery_pic_book);
+                mTvBack.setVisibility(View.GONE);
+                if (mMediaActivity.getCheckedList() != null) {
+                    mMediaActivity.getCheckedList().clear();
+                }
+            }
+        });
 
+        if (!mConfiguration.isRadio()) {
+            mTvOverAction.setOnClickListener(v -> mMediaActivity.finish());
+            mTvOverAction.setVisibility(View.VISIBLE);
+        } else {
+            mTvOverAction.setVisibility(View.GONE);
+        }
         mRvMedia = (RecyclerViewFinal) view.findViewById(R.id.rv_media);
         mLlEmptyView = (LinearLayout) view.findViewById(R.id.ll_empty_view);
         mRvBucket = (RecyclerView) view.findViewById(R.id.rv_bucket);
-        mRlBucektOverview = (RelativeLayout) view.findViewById(R.id.rl_bucket_overview);
-        mRlRootView = (RelativeLayout) view.findViewById(R.id.rl_root_view);
+        mRlBucketOverview = (RelativeLayout) view.findViewById(R.id.rl_bucket_overview);
+        mRlRootView = (LinearLayout) view.findViewById(R.id.rl_root_view);
+        mTvToolbarTitle.setText(R.string.gallery_all_pic);
 
         mRvMedia.setEmptyView(mLlEmptyView);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
@@ -288,7 +315,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         mMediaGridPresenter.getBucketList();
         mBucketAdapter.setOnRecyclerViewItemClickListener(this);
 
-        mRlBucektOverview.setVisibility(View.INVISIBLE);
+        mRlBucketOverview.setVisibility(View.INVISIBLE);
 
         if (slideInUnderneathAnimation == null) {
             slideInUnderneathAnimation = new SlideInUnderneathAnimation(mRvBucket);
@@ -342,6 +369,13 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                     @Override
                     protected void onEvent(CloseMediaViewPageFragmentEvent closeMediaViewPageFragmentEvent) throws Exception {
                         mMediaGridAdapter.notifyDataSetChanged();
+                        if (mMediaActivity.getCheckedList() == null || mMediaActivity.getCheckedList().size() == 0) {
+                            mTvPreview.setEnabled(false);
+                            mSelectDone.setText(getString(R.string.gallery_over_button_text));
+                        } else {
+                            mTvPreview.setEnabled(true);
+                            mSelectDone.setText(getString(R.string.gallery_over_button_text_checked, mMediaActivity.getCheckedList().size()));
+                        }
                     }
                 });
         RxBus.getDefault().add(mCloseMediaViewPageFragmentDisposable);
@@ -451,10 +485,8 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     public void onItemClick(View view, int position) {
         BucketBean bucketBean = mBucketBeanList.get(position);
         String bucketId = bucketBean.getBucketId();
-        if (getActivity() != null) {
-            ((MediaActivity) getActivity()).changeTitle(bucketBean.getBucketName());
-        }
-        mRlBucektOverview.setVisibility(View.GONE);
+        changeTitle(bucketBean.getBucketName());
+        mRlBucketOverview.setVisibility(View.GONE);
         if (TextUtils.equals(mBucketId, bucketId)) {
             return;
         }
@@ -467,6 +499,13 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
         mPage = 1;
         mMediaGridPresenter.getMediaList(mBucketId, mPage, LIMIT);
 
+    }
+
+    public void changeTitle(String bucketName) {
+        mTvToolbarTitle.setText(bucketName);
+        if (!mTvBack.isShown()) {
+            mTvBack.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -713,15 +752,15 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
     }
 
     public boolean isShowRvBucketView() {
-        return mRlBucektOverview != null && mRlBucektOverview.getVisibility() == View.VISIBLE;
+        return mRlBucketOverview != null && mRlBucketOverview.getVisibility() == View.VISIBLE;
     }
 
 
     public void showRvBucketView() {
-        if (mRlBucektOverview == null) {
-            slideInUnderneathAnimation = new SlideInUnderneathAnimation(mRlBucektOverview);
+        if (mRlBucketOverview == null) {
+            slideInUnderneathAnimation = new SlideInUnderneathAnimation(mRlBucketOverview);
         }
-        mRlBucektOverview.setVisibility(View.VISIBLE);
+        mRlBucketOverview.setVisibility(View.VISIBLE);
         slideInUnderneathAnimation
                 .setDirection(Animation.DIRECTION_DOWN)
                 .setDuration(Animation.DURATION_DEFAULT)
@@ -738,7 +777,7 @@ public class MediaGridFragment extends BaseFragment implements MediaGridView, Re
                 .setDuration(Animation.DURATION_DEFAULT)
                 .setListener(animation -> {
                     mSelectDone.setEnabled(true);
-                    mRlBucektOverview.setVisibility(View.GONE);
+                    mRlBucketOverview.setVisibility(View.GONE);
                 })
                 .animate();
     }

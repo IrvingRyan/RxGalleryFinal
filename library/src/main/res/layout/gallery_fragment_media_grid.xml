@@ -1,94 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rl_root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <cn.finalteam.rxgalleryfinal.ui.widget.RecyclerViewFinal
-        android:background="@color/gallery_default_checkbox_text_color"
-        android:id="@+id/rv_media"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/rl_bottom_bar"
-        />
-
     <RelativeLayout
-        android:id="@+id/rl_bottom_bar"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/gallery_default_toolbar_widget_color"
-        android:clickable="true"
-        android:gravity="center_vertical">
+        android:layout_height="@dimen/gallery_default_toolbar_height"
+        android:background="@color/gallery_default_color_toolbar_bg">
 
         <TextView
-            android:id="@+id/select_done"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:gravity="center"
-            android:layout_marginRight="10dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:text="@string/gallery_over_button_text"
-            android:background="@drawable/gallery_shape_done_background"
-            android:textColor="@color/gallery_default_checkbox_text_color"
-            android:textSize="13sp" />
-
-        <TextView
-            android:id="@+id/tv_preview"
+            android:id="@+id/tv_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:clickable="false"
-            android:gravity="center_vertical"
-            android:paddingLeft="18dp"
-            android:paddingRight="18dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
             android:layout_marginLeft="10dp"
-            android:text="@string/gallery_preview_title"
-            android:textColor="@color/gallery_preview_text_color"
-            android:textSize="13sp"
-            android:background="@drawable/gallery_shape_preview_background"/>
+            android:drawableLeft="@drawable/icon_back"
+            android:drawablePadding="3dp"
+            android:gravity="center_vertical"
+            android:text="@string/gallery_back_button_text"
+            android:textColor="@color/gallery_default_toolbar_widget_color"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:textColor="@color/gallery_default_toolbar_widget_color"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_over_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:gravity="center_vertical"
+            android:text="@string/gallery_cancel_button_text"
+            android:textColor="@color/gallery_default_toolbar_widget_color"
+            android:textSize="15sp" />
 
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/rl_bucket_overview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/gallery_media_grid_block_color"
-        android:clickable="true"
-        android:visibility="gone">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_bucket"
+        <cn.finalteam.rxgalleryfinal.ui.widget.RecyclerViewFinal
+            android:id="@+id/rv_media"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/gallery_bucket_list_item_normal_color" />
+            android:layout_above="@+id/rl_bottom_bar"
+            android:background="@color/gallery_default_checkbox_text_color" />
+
+        <RelativeLayout
+            android:id="@+id/rl_bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/gallery_default_toolbar_widget_color"
+            android:clickable="true"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/select_done"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/gallery_shape_done_background"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="@string/gallery_over_button_text"
+                android:textColor="@color/gallery_default_checkbox_text_color"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tv_preview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/gallery_shape_preview_background"
+                android:clickable="false"
+                android:gravity="center_vertical"
+                android:paddingBottom="5dp"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:paddingTop="5dp"
+                android:text="@string/gallery_preview_title"
+                android:textColor="@color/gallery_preview_text_color"
+                android:textSize="13sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_bucket_overview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/gallery_media_grid_block_color"
+            android:clickable="true"
+            android:visibility="gone">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_bucket"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/gallery_bucket_list_item_normal_color" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ProgressBar
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/gallery_loading_view_loading" />
+        </LinearLayout>
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
 
-        <ProgressBar
-            style="@style/Widget.AppCompat.ProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/gallery_loading_view_loading" />
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

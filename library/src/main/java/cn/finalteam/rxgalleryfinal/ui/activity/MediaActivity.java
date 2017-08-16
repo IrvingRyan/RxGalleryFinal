@@ -1,18 +1,12 @@
 package cn.finalteam.rxgalleryfinal.ui.activity;
 
 import android.content.pm.PackageManager;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.StateListDrawable;
-import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,16 +51,12 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     private MediaPageFragment mMediaPageFragment;
     private MediaPreviewFragment mMediaPreviewFragment;
 
-    private RelativeLayout mToolbar;
-    private TextView mTvToolbarTitle;
-    private TextView mTvOverAction;
 
     private ArrayList<MediaBean> mCheckedList;
     private int mSelectedIndex = 0;
     private ArrayList<MediaBean> mPageMediaList;
     private int mPagePosition;
     private int mPreviewPosition;
-    private TextView mTvBack;
 
     @Override
     public int getContentView() {
@@ -76,25 +66,8 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     @Override
     protected void onCreateOk(@Nullable Bundle savedInstanceState) {
         mMediaGridFragment = MediaGridFragment.newInstance(mConfiguration);
-        if (!mConfiguration.isRadio()) {
-            mTvOverAction.setOnClickListener(v -> finish());
-            mTvOverAction.setVisibility(View.VISIBLE);
-        } else {
-            mTvOverAction.setVisibility(View.GONE);
-        }
+
         mCheckedList = new ArrayList<>();
-//        List<MediaBean> selectedList = mConfiguration.getSelectedList();
-//        if (selectedList != null && selectedList.size() > 0) {
-//            mCheckedList.addAll(selectedList);
-//            if (mCheckedList.size() > 0) {
-//                String text = getResources().getString(R.string.gallery_over_button_text_checked, mCheckedList.size(), mConfiguration.getMaxSize());
-//                mTvOverAction.setText(text);
-//                mTvOverAction.setEnabled(true);
-//            } else {
-//                mTvOverAction.setText(R.string.gallery_over_button_text);
-//                mTvOverAction.setEnabled(false);
-//            }
-//        }
 
         showMediaGridFragment();
         subscribeEvent();
@@ -102,38 +75,11 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
 
     @Override
     public void findViews() {
-        mToolbar = (RelativeLayout) findViewById(R.id.toolbar);
-        mTvToolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
-        mTvOverAction = (TextView) findViewById(R.id.tv_over_action);
-        mTvBack = (TextView) findViewById(R.id.tv_back);
-        mTvBack.setOnClickListener(v -> {
-            if (mMediaGridFragment.isVisible()) {
-                mMediaGridFragment.showRvBucketView();
-                mMediaGridFragment.changeList();
-                mTvToolbarTitle.setText(R.string.gallery_pic_book);
-                mTvBack.setVisibility(View.GONE);
-                if (mCheckedList != null) {
-                    mCheckedList.clear();
-                }
-            }
-        });
+
     }
 
     @Override
     protected void setTheme() {
-//        Drawable closeDrawable = ThemeUtils.resolveDrawable(this, R.attr.gallery_toolbar_close_image, R.drawable.gallery_default_toolbar_close_image);
-//        int closeColor = ThemeUtils.resolveColor(this, R.attr.gallery_toolbar_close_color, R.color.gallery_default_toolbar_widget_color);
-//        closeDrawable.setColorFilter(closeColor, PorterDuff.Mode.SRC_ATOP);
-//        mToolbar.setNavigationIcon(closeDrawable);
-
-//        int overButtonBg = ThemeUtils.resolveDrawableRes(this, R.attr.gallery_toolbar_over_button_bg);
-//        if (overButtonBg != 0) {
-//            mTvOverAction.setBackgroundResource(overButtonBg);
-//        } else {
-//            OsCompat.setBackgroundDrawableCompat(mTvOverAction, createDefaultOverButtonBgDrawable());
-//        }
-
-
         int statusBarColor = ThemeUtils.resolveColor(this, R.attr.gallery_color_statusbar, R.color.gallery_default_color_statusbar);
         ThemeUtils.setStatusBarColor(statusBarColor, getWindow());
 
@@ -202,13 +148,6 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         ft.show(mMediaGridFragment)
                 .commit();
 
-//        if (mConfiguration.isImage()) {
-//            mTvToolbarTitle.setText(R.string.gallery_media_grid_image_title);
-//        } else {
-//            mTvToolbarTitle.setText(R.string.gallery_media_grid_video_title);
-//        }
-        mTvToolbarTitle.setText(R.string.gallery_all_pic);
-
     }
 
     @Override
@@ -223,7 +162,6 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         ft.commit();
 
         String title = getString(R.string.gallery_page_title, position + 1, list.size());
-        mTvToolbarTitle.setText(title);
     }
 
     @Override
@@ -238,7 +176,6 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         ft.commit();
 
         String title = getString(R.string.gallery_page_title, mPreviewPosition, mCheckedList.size());
-        mTvToolbarTitle.setText(title);
     }
 
     private void subscribeEvent() {
@@ -282,7 +219,6 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
                             mPagePosition = curIndex;
                         }
                         String title = getString(R.string.gallery_page_title, curIndex + 1, totalSize);
-                        mTvToolbarTitle.setText(title);
                     }
                 });
         RxBus.getDefault().add(subscriptionMediaViewPagerChangedEvent);
@@ -343,28 +279,6 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         RxJob.getDefault().clearJob();
     }
 
-    private StateListDrawable createDefaultOverButtonBgDrawable() {
-        int dp12 = (int) ThemeUtils.applyDimensionDp(this, 12.f);
-        int dp8 = (int) ThemeUtils.applyDimensionDp(this, 8.f);
-        float dp4 = ThemeUtils.applyDimensionDp(this, 4.f);
-        float[] round = new float[]{dp4, dp4, dp4, dp4, dp4, dp4, dp4, dp4};
-        ShapeDrawable pressedDrawable = new ShapeDrawable(new RoundRectShape(round, null, null));
-        pressedDrawable.setPadding(dp12, dp8, dp12, dp8);
-        int pressedColor = ThemeUtils.resolveColor(this, R.attr.gallery_toolbar_over_button_pressed_color, R.color.gallery_default_toolbar_over_button_pressed_color);
-        pressedDrawable.getPaint().setColor(pressedColor);
-
-        int normalColor = ThemeUtils.resolveColor(this, R.attr.gallery_toolbar_over_button_normal_color, R.color.gallery_default_toolbar_over_button_normal_color);
-        ShapeDrawable normalDrawable = new ShapeDrawable(new RoundRectShape(round, null, null));
-        normalDrawable.setPadding(dp12, dp8, dp12, dp8);
-        normalDrawable.getPaint().setColor(normalColor);
-
-        StateListDrawable stateListDrawable = new StateListDrawable();
-        stateListDrawable.addState(new int[]{android.R.attr.state_pressed}, pressedDrawable);
-        stateListDrawable.addState(new int[]{}, normalDrawable);
-
-        return stateListDrawable;
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -395,10 +309,5 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
     }
 
 
-    public void changeTitle(String bucketName) {
-        mTvToolbarTitle.setText(bucketName);
-        if (!mTvBack.isShown()) {
-            mTvBack.setVisibility(View.VISIBLE);
-        }
-    }
+
 }

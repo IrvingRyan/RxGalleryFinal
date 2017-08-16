@@ -4,48 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/gallery_default_toolbar_height"
-        android:background="@color/gallery_default_color_toolbar_bg">
-
-        <TextView
-            android:id="@+id/tv_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:drawableLeft="@drawable/icon_back"
-            android:drawablePadding="3dp"
-            android:gravity="center_vertical"
-            android:text="@string/gallery_back_button_text"
-            android:layout_marginLeft="10dp"
-            android:textColor="@color/gallery_default_toolbar_widget_color"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/tv_toolbar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textColor="@color/gallery_default_toolbar_widget_color"
-            android:layout_gravity="center"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/tv_over_action"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:textColor="@color/gallery_default_toolbar_widget_color"
-            android:layout_marginRight="15dp"
-            android:gravity="center_vertical"
-            android:text="@string/gallery_cancel_button_text"
-            android:textSize="15sp" />
-
-    </RelativeLayout>
-
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
