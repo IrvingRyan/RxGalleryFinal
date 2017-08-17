@@ -17,9 +17,11 @@ import com.yalantis.ucrop.UCropActivity;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
+import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultDisposable;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
@@ -532,6 +534,11 @@ public class RxGalleryFinalApi {
      */
     public RxGalleryFinalApi open() {
         rxGalleryFinal.openGallery();
+        return mRxApi;
+    }
+
+    public RxGalleryFinalApi selected(List<MediaBean> list){
+        rxGalleryFinal.selected(list);
         return mRxApi;
     }
 

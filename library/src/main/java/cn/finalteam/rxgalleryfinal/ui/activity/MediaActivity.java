@@ -68,6 +68,9 @@ public class MediaActivity extends BaseActivity implements ActivityFragmentView 
         mMediaGridFragment = MediaGridFragment.newInstance(mConfiguration);
 
         mCheckedList = new ArrayList<>();
+        if (mConfiguration.getSelectedList() != null) {
+            mCheckedList.addAll(mConfiguration.getSelectedList());
+        }
 
         showMediaGridFragment();
         subscribeEvent();
